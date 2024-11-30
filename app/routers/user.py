@@ -31,10 +31,10 @@ async def create_user(db: Annotated[Session, Depends(get_db)], create_user: Crea
         if user.username == create_user.username:
          raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='User already exists')
     db.execute(insert(User).values(username=create_user.username,
-                                        firstname=create_user.firstname,
-                                        lastname=create_user.lastname,
-                                        age=create_user.age,
-                                        slug=slugify(create_user.username)))
+                                   firstname=create_user.firstname, 
+                                   lastname=create_user.lastname, 
+                                   age=create_user.age, 
+                                   slug=slugify(create_user.username)))
     db.commit()
     return {'status_code': status.HTTP_201_CREATED, 'transaction': 'Successful'}
 
