@@ -26,11 +26,17 @@ async def user_by_id(db: Annotated[Session, Depends(get_db)], user_id: int):
 
 @router_user.post('/create')
 async def create_user(db: Annotated[Session, Depends(get_db)], create_user: CreateUser):
+    users = db.scalars(select(User).where(User.id)).all()
+    for user in users:
+        if user.username == create_user.username:
+         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='User already exists')
     db.execute(insert(User).values(username=create_user.username,
-                                            firstname=create_user.firstname,
-                                            lastname=create_user.lastname,
-                                            age=create_user.age,
-                                            slug=slugify(create_user.username)))
+                                        firstname=create_user.firstname,
+                                        lastname=create_user.lastname,
+                                        age=create_user.age,
+                                        slug=slugify(create_user.username)))
+    db.commit()
+    return {'status_code': status.HTTP_201_CREATED, 'transaction': 'Successful'}
 
 
 @router_user.put('/update')
