@@ -19,6 +19,9 @@ class CreateTask(BaseModel):
     title: str
     content: str
     priority: int
+    user_id: int
+    slug: None
+    completed: None
 
 
 class UpdateTask(BaseModel):
